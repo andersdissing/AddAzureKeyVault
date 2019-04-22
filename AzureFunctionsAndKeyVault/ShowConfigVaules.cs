@@ -33,10 +33,7 @@ namespace AzureFunctionsAndKeyVault
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req,
             ILogger log)
         {
-            return new OkObjectResult(new {
-                configValues.Children,
-                configValues.Count
-            });
+            return new OkObjectResult(configValues);
         }
     }
 
@@ -55,9 +52,11 @@ namespace AzureFunctionsAndKeyVault
                 .AddEnvironmentVariables()
                 .Build();
 
+            var azureKeyVaultName = buildconfig.GetConnectionStringOrSetting("AzureKeyVaultName");
+
             var config = new ConfigurationBuilder()
                 .AddEnvironmentVariables()
-                .AddAzureKeyVault($"https://{buildconfig.GetConnectionStringOrSetting("AzureKeyVaultName")}.vault.azure.net/",
+                .AddAzureKeyVault($"https://{azureKeyVaultName}.vault.azure.net/",
                         keyVaultClient,
                         new DefaultKeyVaultSecretManager())
                 .Build();
