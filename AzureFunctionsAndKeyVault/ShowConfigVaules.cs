@@ -16,8 +16,9 @@ using Microsoft.Extensions.Configuration.AzureKeyVault;
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
+using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 
-[assembly: WebJobsStartup(typeof(CustomWebJobsStartup))]
+[assembly: FunctionsStartup(typeof(CustomWebJobsStartup))]
 namespace AzureFunctionsAndKeyVault
 {
     public class ShowConfigVaules
@@ -37,9 +38,9 @@ namespace AzureFunctionsAndKeyVault
         }
     }
 
-    public class CustomWebJobsStartup : IWebJobsStartup
+    public class CustomWebJobsStartup : FunctionsStartup
     {
-        public void Configure(IWebJobsBuilder builder)
+        public override void Configure(IFunctionsHostBuilder builder)
         {
             var azureServiceTokenProvider = new AzureServiceTokenProvider();
             var keyVaultClient = new KeyVaultClient(
